@@ -86,7 +86,7 @@ namespace Invoice.Services
 
                     await CreateInvoice(newInvoice);
                 }
-                else if (invoice.paid_amount > 0 && invoice.paid_amount < invoice.amount)
+                else if (invoice.paid_amount > 0)
                 {
                     // Partially paid invoice
                     invoice.status = "paid";
