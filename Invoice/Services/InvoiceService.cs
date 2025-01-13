@@ -49,8 +49,8 @@ namespace Invoice.Services
             if (invoiceData == null)
                 throw new Exception("Invoice not found");
 
-            if (invoiceData.status == "paid")
-                throw new Exception("Invoice paid");
+            if (invoiceData.status == "paid" || invoiceData.status == "void")
+                throw new Exception("Invoice not payable");
 
             if (invoiceData.amount < amount)
                 throw new Exception("Amount paid should not be greater than total amount");
