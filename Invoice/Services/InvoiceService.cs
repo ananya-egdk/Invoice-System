@@ -69,7 +69,7 @@ namespace Invoice.Services
         {
             var invoices = await _invoiceRepository.GetAllInvoicesAsync();
 
-            foreach (var invoice in invoices.Where(i => i.due_date < DateTime.Now && i.status == "pending"))
+            foreach (var invoice in invoices.Where(i => i.due_date.Date < DateTime.Now.Date && i.status == "pending"))
             {
                 if (invoice.paid_amount == 0)
                 {
@@ -80,7 +80,7 @@ namespace Invoice.Services
                     {
                         Amount = invoice.amount + lateFee,
                         Paid_amount = 0,
-                        Due_date = DateTime.Now.AddDays(overdueDays),
+                        Due_date = invoice.due_date.AddDays(overdueDays),
                         Status = "pending"
                     };
 
@@ -95,7 +95,7 @@ namespace Invoice.Services
                     {
                         Amount = invoice.amount + lateFee,
                         Paid_amount = 0,
-                        Due_date = DateTime.Now.AddDays(overdueDays),
+                        Due_date = invoice.due_date.AddDays(overdueDays),
                         Status = "pending"
                     };
 

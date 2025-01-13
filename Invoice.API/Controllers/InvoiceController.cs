@@ -3,8 +3,6 @@ using Invoice.Data;
 using Invoice.Data.Dto;
 using Invoice.Models;
 using Invoice.Services.Interface;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Invoice.API.Controllers
@@ -37,11 +35,9 @@ namespace Invoice.API.Controllers
         {
             var result = await _invoiceService.GetAllInvoices();
             return _mapper.Map<List<InvoiceDto>>(result).ToList();
-
         }
 
         [HttpPut("{id}/payments")]
-        //[Route("{id}")]
         public async Task<IActionResult> PayInvoice([FromRoute] int id, [FromBody] double amount)
         {
             var result = await _invoiceService.UpdateInvoiceAmount(id, amount);

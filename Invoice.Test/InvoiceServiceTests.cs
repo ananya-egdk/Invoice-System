@@ -7,6 +7,7 @@ using Moq;
 
 namespace Invoice.Test
 {
+    
     public class InvoiceServiceTests
     {
         private readonly Mock<IMapper> mockMapper = new Mock<IMapper>();
@@ -18,7 +19,6 @@ namespace Invoice.Test
             _invoiceService = new InvoiceService(mockMapper.Object, mockInvoiceRepository.Object);
         }
 
-        // Positive test case for CreateInvoice
         [Fact]
         public async Task CreateInvoice_ShouldReturnInvoiceWithValidDetails()
         {
@@ -39,7 +39,6 @@ namespace Invoice.Test
             Assert.Equal(invoiceModel.Due_date, createdInvoice.Due_date);
         }
 
-        // Negative test case for CreateInvoice (invalid amount)
         [Fact]
         public async Task CreateInvoice_ShouldThrowExceptionForInvalidAmount()
         {
@@ -51,7 +50,6 @@ namespace Invoice.Test
             Assert.Equal("Amount should be greater than 0", exception.Message);
         }
 
-        // Negative test case for CreateInvoice (past due date)
         [Fact]
         public async Task CreateInvoice_ShouldThrowExceptionForPastDueDate()
         {
@@ -63,15 +61,6 @@ namespace Invoice.Test
             Assert.Equal("Due date cannot be in the past", exception.Message);
         }
 
-        //[Fact]
-        //public async Task CreateInvoice_ShouldThrowExceptionForNullInvoice()
-        //{
-        //    // Act & Assert
-        //    var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => _invoiceService.CreateInvoice(null));
-        //    Assert.Equal("Value cannot be null. (Parameter 'invoice')", exception.Message);
-        //}
-
-        // Positive test case for GetAllInvoices
         [Fact]
         public async Task GetAllInvoices_ShouldReturnListOfInvoices()
         {
@@ -102,18 +91,17 @@ namespace Invoice.Test
         public async Task GetAllInvoices_ShouldReturnEmptyListWhenNoInvoicesExist()
         {
             // Arrange
-            var invoiceEntities = new List<InvoiceEntity>();  // No invoices
+            var invoiceEntities = new List<InvoiceEntity>();
             mockInvoiceRepository.Setup(repo => repo.GetAllInvoicesAsync()).ReturnsAsync(invoiceEntities);
 
             // Act
             var invoices = await _invoiceService.GetAllInvoices();
 
             // Assert
-            Assert.NotNull(invoices);  // Ensure it's not null
-            Assert.Empty(invoices);    // Ensure it's an empty list
+            Assert.NotNull(invoices);
+            Assert.Empty(invoices);
         }
 
-        // Positive test case for UpdateInvoiceAmount
         [Fact]
         public async Task UpdateInvoiceAmount_ShouldUpdateAmountCorrectly()
         {
@@ -133,7 +121,6 @@ namespace Invoice.Test
             Assert.Equal(200, updatedInvoice.Paid_amount);
         }
 
-        // Negative test case for UpdateInvoiceAmount (invalid amount)
         [Fact]
         public async Task UpdateInvoiceAmount_ShouldThrowExceptionForInvalidAmount()
         {
@@ -142,7 +129,6 @@ namespace Invoice.Test
             Assert.Equal("Amount should be greater than 0", exception.Message);
         }
 
-        // Negative test case for UpdateInvoiceAmount (invoice not found)
         [Fact]
         public async Task UpdateInvoiceAmount_ShouldThrowExceptionWhenInvoiceNotFound()
         {
@@ -154,7 +140,6 @@ namespace Invoice.Test
             Assert.Equal("Invoice not found", exception.Message);
         }
 
-        // Positive test case for ProcessOverdueInvoices
         [Fact]
         public async Task ProcessOverdueInvoices_ShouldMarkInvoicesAsVoidAndCreateNewOnes()
         {

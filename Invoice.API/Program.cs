@@ -21,7 +21,6 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
 builder.Services.AddScoped<IInvoiceService, InvoiceService>()
                 .AddScoped<IInvoiceRepository, InvoiceRepository>();
 
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

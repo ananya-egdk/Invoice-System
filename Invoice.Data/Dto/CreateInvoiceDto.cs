@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Invoice.Data.Dto
+﻿namespace Invoice.Data.Dto
 {
     public class CreateInvoiceDto
     {
-        public double amount { get; set; }
-        public DateTime due_date { get; set; }
+        public double Amount { get; set; }
+        public DateOnly Due_date { get; set; }
     }
 }
