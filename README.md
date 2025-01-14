@@ -2,6 +2,37 @@
 
 A RESTful API for managing invoices, allowing creation, payment, and processing of overdue invoices.
 
+# Project Architecture
+
+This project follows a **3-tier architecture**, ensuring separation of concerns for better scalability and maintainability:
+
+### 1. Invoice.API
+- Handles HTTP requests and responses.
+- Contains:
+  - Controllers
+  - Mappings
+  - Configuration files for the API.
+ 
+### 2. Invoice
+- Implements business logic.
+- Contains:
+  - **Services**: Core logic for invoice processing.
+  - **Enums**: Enumerations for statuses and other constants.
+  - **Models**: Domain models used for core operations.
+
+### 3. Invoice.Data
+- Manages database operations and domain models.
+- Contains:
+  - **Entities**: Database entity definitions.
+  - **DTOs**: Data Transfer Objects for input/output operations.
+  - **Repository Pattern**: Encapsulates data access logic.
+  - **Database Context (`InvoiceDbContext`)**: Manages EF Core interactions with the database.
+
+### 4. Invoice.Test
+- Contains unit tests for domain logic and services.
+- Ensures functionality and correctness of the system.
+
+
 ## Features
 
 - **Create Invoice**:  
