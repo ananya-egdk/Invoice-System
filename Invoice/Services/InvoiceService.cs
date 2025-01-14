@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Invoice.Data.Entity;
 using Invoice.Data.Repository.Interface;
+using Invoice.Enums;
 using Invoice.Models;
 using Invoice.Services.Interface;
 
@@ -49,7 +50,7 @@ namespace Invoice.Services
             if (invoiceData == null)
                 throw new Exception("Invoice not found");
 
-            if (invoiceData.status == "paid" || invoiceData.status == "void")
+            if (invoiceData.status == PaymentTypeEnum.Paid.ToString() || invoiceData.status == PaymentTypeEnum.Void.ToString())
                 throw new Exception("Invoice not payable");
 
             if (invoiceData.amount < amount)
@@ -59,7 +60,7 @@ namespace Invoice.Services
             invoiceData.amount -= amount;
 
             if (invoiceData.amount == 0)
-                invoiceData.status = "paid";
+                invoiceData.status = PaymentTypeEnum.Paid.ToString();
 
             await _invoiceRepository.UpdateInvoiceAsync(invoiceData);
             return mapper.Map<InvoiceModel>(invoiceData);
@@ -69,39 +70,25 @@ namespace Invoice.Services
         {
             var invoices = await _invoiceRepository.GetAllInvoicesAsync();
 
-            foreach (var invoice in invoices.Where(i => i.due_date.Date < DateTime.Now.Date && i.status == "pending"))
+            foreach (var invoice in invoices.Where(i => i.due_date.Date < DateTime.Now.Date && i.status == PaymentTypeEnum.Pending.ToString()))
             {
                 if (invoice.paid_amount == 0)
-                {
-                    invoice.status = "void";
-
-                    // new invoice
-                    var newInvoice = new InvoiceModel
-                    {
-                        Amount = invoice.amount + lateFee,
-                        Paid_amount = 0,
-                        Due_date = invoice.due_date.AddDays(overdueDays),
-                        Status = "pending"
-                    };
-
-                    await CreateInvoice(newInvoice);
-                }
+                    // Invoice never paid
+                    invoice.status = PaymentTypeEnum.Void.ToString();
                 else if (invoice.paid_amount > 0)
-                {
                     // Partially paid invoice
-                    invoice.status = "paid";
+                    invoice.status = PaymentTypeEnum.Paid.ToString();
 
-                    var newInvoice = new InvoiceModel
-                    {
-                        Amount = invoice.amount + lateFee,
-                        Paid_amount = 0,
-                        Due_date = invoice.due_date.AddDays(overdueDays),
-                        Status = "pending"
-                    };
+                // new invoice
+                var newInvoice = new InvoiceModel
+                {
+                    Amount = invoice.amount + lateFee,
+                    Paid_amount = 0,
+                    Due_date = invoice.due_date.AddDays(overdueDays),
+                    Status = PaymentTypeEnum.Pending.ToString()
+                };
 
-                    await CreateInvoice(newInvoice);
-                }
-
+                await CreateInvoice(newInvoice);
                 await _invoiceRepository.UpdateInvoiceAsync(invoice);
             }
         }

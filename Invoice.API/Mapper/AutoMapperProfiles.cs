@@ -24,12 +24,6 @@ namespace Invoice.Data.Mapper
             
             CreateMap<CreateInvoiceDto, InvoiceModel>()
                 .ForMember(dest => dest.Due_date, opt => opt.MapFrom(src => src.Due_date.ToDateTime(TimeOnly.MinValue)));
-            
-            //CreateMap<InvoiceModel, InvoiceDto>()
-            //.ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
-
-            //CreateMap<InvoiceDto, InvoiceModel>()
-            //    .ForMember(dest => dest.Id, opt => opt.MapFrom(src => int.Parse(src.Id)));
         }
     }
 }

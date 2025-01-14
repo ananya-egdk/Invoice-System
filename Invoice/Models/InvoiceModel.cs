@@ -1,4 +1,6 @@
-﻿namespace Invoice.Models
+﻿using Invoice.Enums;
+
+namespace Invoice.Models
 {
     public class InvoiceModel
     {
@@ -6,6 +8,6 @@
         public double Amount { get; set; }
         public double Paid_amount { get; set; }
         public DateTime Due_date { get; set; }
-        public string Status { get; set; } = "pending";
+        public string Status { get; set; } = PaymentTypeEnum.Pending.ToString();
     }
 }

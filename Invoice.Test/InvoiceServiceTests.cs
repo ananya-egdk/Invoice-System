@@ -1,6 +1,7 @@
 using AutoMapper;
 using Invoice.Data.Entity;
 using Invoice.Data.Repository.Interface;
+using Invoice.Enums;
 using Invoice.Models;
 using Invoice.Services;
 using Moq;
@@ -106,8 +107,8 @@ namespace Invoice.Test
         public async Task UpdateInvoiceAmount_ShouldUpdateAmountCorrectly()
         {
             // Arrange
-            var invoiceEntity = new InvoiceEntity { id = 1, amount = 500, paid_amount = 100, status = "pending" };
-            var updatedInvoiceModel = new InvoiceModel { Amount = 300, Paid_amount = 200, Status = "pending" };
+            var invoiceEntity = new InvoiceEntity { id = 1, amount = 500, paid_amount = 100, status = PaymentTypeEnum.Pending.ToString() };
+            var updatedInvoiceModel = new InvoiceModel { Amount = 300, Paid_amount = 200, Status = PaymentTypeEnum.Pending.ToString() };
 
             mockInvoiceRepository.Setup(repo => repo.GetInvoiceByIdAsync(1)).ReturnsAsync(invoiceEntity);
             mockMapper.Setup(m => m.Map<InvoiceModel>(invoiceEntity)).Returns(updatedInvoiceModel);
@@ -150,7 +151,7 @@ namespace Invoice.Test
                 amount = 1000,
                 paid_amount = 0,
                 due_date = DateTime.Now.AddDays(-5).Date,
-                status = "pending"
+                status = PaymentTypeEnum.Pending.ToString()
             };
             var newInvoiceEntity = new InvoiceEntity
             {
@@ -158,7 +159,7 @@ namespace Invoice.Test
                 amount = 1050,
                 paid_amount = 0,
                 due_date = DateTime.Now.AddDays(30).Date,
-                status = "pending"
+                status = PaymentTypeEnum.Pending.ToString()
             };
 
             var invoices = new List<InvoiceEntity> { overdueInvoice };
@@ -169,7 +170,7 @@ namespace Invoice.Test
             await _invoiceService.ProcessOverdueInvoicesAsync(50, 30);
 
             // Assert
-            Assert.Equal("void", overdueInvoice.status);
+            Assert.Equal(PaymentTypeEnum.Void.ToString(), overdueInvoice.status);
             mockInvoiceRepository.Verify(repo => repo.UpdateInvoiceAsync(overdueInvoice), Times.Once);
             mockInvoiceRepository.Verify(repo => repo.CreateInvoiceAsync(It.IsAny<InvoiceEntity>()), Times.Once);
         }

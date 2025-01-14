@@ -38,9 +38,9 @@ namespace Invoice.API.Controllers
         }
 
         [HttpPut("{id}/payments")]
-        public async Task<IActionResult> PayInvoice([FromRoute] int id, [FromBody] double amount)
+        public async Task<IActionResult> PayInvoice([FromRoute] int id, PayInvoiceDto payInvoice)
         {
-            var result = await _invoiceService.UpdateInvoiceAmount(id, amount);
+            var result = await _invoiceService.UpdateInvoiceAmount(id, payInvoice.Amount);
             return Ok(result);
         }
 

@@ -9,6 +9,6 @@ namespace Invoice.Data.Entity
         public double amount { get; set; }
         public double paid_amount { get; set; }
         public DateTime due_date { get; set; }
-        public string status { get; set; } = "pending";
+        public string status { get; set; }
     }
 }
